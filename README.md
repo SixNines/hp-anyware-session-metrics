@@ -16,7 +16,9 @@ The EC2 instances used as workstations run a PCoIP agent (standard or graphic de
 
 We will use terraform to deploy everything.
 
-## CloudWatch Log group
+## Implementation
+
+### CloudWatch Log group
 
 We will first create a Log group in CloudWatch where all the data is going to be pushed:
 
@@ -28,7 +30,7 @@ resource "aws_cloudwatch_log_group" "pcoip_logs" {
 }
 ```
 
-## CloudWatch agent configurations
+### CloudWatch agent configurations
 
 The logs of the agent are located in **/var/log/pcoip-agent/** (Linux) or **C:\ProgramData\Teradici\PCoIPAgent\logs** (Windows), so we need to install and configure the CloudWatch agent to push logs from there. The cofigurations are templates that terraform will parse and save in AWS SSM parameters:
 
@@ -111,7 +113,7 @@ resource "aws_ssm_parameter" "cloudwatch_config_windows" {
 }
 ```
 
-## Workstations provisioning
+### Workstations provisioning
 
 To install and configure automatically the CloudWatch agent in workstations, we will use AWS Systems Manager (AWS SSM). We will create an AWS SSM document and an association between this document and our workstations.
 
@@ -181,7 +183,7 @@ resource "aws_ssm_association" "cloudwatch_agent" {
 }
 ```
 
-## Filtering and parsing logs
+### Filtering and parsing logs
 
 Now that we have the workstations logs in CloudWatch Logs we can create a *log subscription filter* that will send specific logs of the log group to a lambda for processing:
 
@@ -367,3 +369,20 @@ def lambda_handler(event, context):
                 handle_event(event_definition, instance_id, match, timestamp)
                 break
 ```
+
+## Results
+
+## TL;DR
+
+PCoIP sessions metrics can be programatically pushed from workstations' PCoIP agent logs using AWS Systems Manager, AWS CloudWatch and AWS Lambda.
+
+AWS Systems Manager is used to install and configure the CloudWatch agent in the workstations; and to store cloudwatch configurations in AWS SSM parameters.
+
+AWS CloudWatch agent is used to push logs from workstations to AWS CloudWatch logs; AWS CloudWatch Log Subscription is used to filter logs and execute a processing lambda; AWS CloudWatch Metrics is used to store the results.
+
+AWS Lambda is used to process filtered logs from AWS CloudWatch Logs and extract metrics from there.
+
+## Reference
+
+
+
