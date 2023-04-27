@@ -1,0 +1,34 @@
+schemaVersion: '2.2'
+description: 'Install and run CW agent'
+mainSteps:
+- action: aws:configurePackage
+  name: InstallCWAgent
+  inputs:
+    name: AmazonCloudWatchAgent
+    action: Install
+- action: aws:runDocument
+  name: ConfigureCWAgentLinux
+  precondition:
+      StringEquals:
+      - platformType
+      - Linux
+  inputs:
+    documentType: SSMDocument
+    documentPath: AmazonCloudWatch-ManageAgent
+    documentParameters:
+      action: configure
+      optionalConfigurationSource: ssm
+      optionalConfigurationLocation: "${linux_ssm_parameter}"
+- action: aws:runDocument
+  name: ConfigureCWAgentWindows
+  precondition:
+      StringEquals:
+      - platformType
+      - Windows
+  inputs:
+    documentType: SSMDocument
+    documentPath: AmazonCloudWatch-ManageAgent
+    documentParameters:
+      action: configure
+      optionalConfigurationSource: ssm
+      optionalConfigurationLocation: "${windows_ssm_parameter}"

@@ -1,0 +1,43 @@
+<mxfile host="Electron" modified="2023-04-27T16:00:40.546Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.1.2 Chrome/106.0.5249.199 Electron/21.4.3 Safari/537.36" etag="QNoctQL2aEC1oftqLkxw" version="21.1.2" type="device">
+  <diagram name="Page-1" id="sm-NZi3Ue_eyGFyM-eu7">
+    <mxGraphModel dx="2045" dy="697" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="K-UpssDX2v9c6PwXXokg-1" value="" style="rounded=1;arcSize=10;dashed=0;fillColor=none;gradientColor=none;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="-90.76" y="412" width="1071" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="K-UpssDX2v9c6PwXXokg-2" value="" style="dashed=0;html=1;shape=mxgraph.aws3.cloud;fillColor=#F58536;gradientColor=none;dashed=0;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="-140" y="360" width="115.56" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="K-UpssDX2v9c6PwXXokg-9" value="Push logs" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;verticalAlign=bottom;labelBackgroundColor=none;fontSize=9;" edge="1" parent="1" source="K-UpssDX2v9c6PwXXokg-3" target="K-UpssDX2v9c6PwXXokg-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="K-UpssDX2v9c6PwXXokg-3" value="Workstation" style="outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;shape=mxgraph.aws3.ec2;fillColor=#F58534;gradientColor=none;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="194" y="495.5" width="76.5" height="93" as="geometry" />
+        </mxCell>
+        <mxCell id="K-UpssDX2v9c6PwXXokg-4" value="CloudWatch Metrics" style="outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;shape=mxgraph.aws3.cloudwatch;fillColor=#759C3E;gradientColor=none;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="830" y="495.5" width="82.5" height="93" as="geometry" />
+        </mxCell>
+        <mxCell id="K-UpssDX2v9c6PwXXokg-11" value="Filtered logs pushed&lt;br style=&quot;font-size: 9px;&quot;&gt;to Lambda" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;labelBackgroundColor=none;fontSize=9;" edge="1" parent="1" source="K-UpssDX2v9c6PwXXokg-5" target="K-UpssDX2v9c6PwXXokg-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="K-UpssDX2v9c6PwXXokg-5" value="CloudWatch Logs" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;fillColor=#B0084D;strokeColor=none;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=1;aspect=fixed;pointerEvents=1;shape=mxgraph.aws4.logs;" vertex="1" parent="1">
+          <mxGeometry x="397" y="506.5" width="95.48" height="71" as="geometry" />
+        </mxCell>
+        <mxCell id="K-UpssDX2v9c6PwXXokg-8" value="Install and configure&lt;br style=&quot;font-size: 9px;&quot;&gt;CW agent" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;labelBackgroundColor=none;fontSize=9;" edge="1" parent="1" source="K-UpssDX2v9c6PwXXokg-7" target="K-UpssDX2v9c6PwXXokg-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="K-UpssDX2v9c6PwXXokg-7" value="AWS Systems Manager" style="sketch=0;points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];points=[[0,0,0],[0.25,0,0],[0.5,0,0],[0.75,0,0],[1,0,0],[0,1,0],[0.25,1,0],[0.5,1,0],[0.75,1,0],[1,1,0],[0,0.25,0],[0,0.5,0],[0,0.75,0],[1,0.25,0],[1,0.5,0],[1,0.75,0]];outlineConnect=0;fontColor=#232F3E;gradientColor=#F34482;gradientDirection=north;fillColor=#BC1356;strokeColor=#ffffff;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;fontSize=12;fontStyle=1;aspect=fixed;shape=mxgraph.aws4.resourceIcon;resIcon=mxgraph.aws4.systems_manager;" vertex="1" parent="1">
+          <mxGeometry x="-20" y="503" width="78" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="K-UpssDX2v9c6PwXXokg-12" value="Processed metrics&lt;br style=&quot;font-size: 9px;&quot;&gt;pushed to Cloudwatch" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;labelBackgroundColor=none;fontSize=9;" edge="1" parent="1" source="K-UpssDX2v9c6PwXXokg-10" target="K-UpssDX2v9c6PwXXokg-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="K-UpssDX2v9c6PwXXokg-10" value="AWS Lambda" style="outlineConnect=0;dashed=0;verticalLabelPosition=bottom;verticalAlign=top;align=center;html=1;shape=mxgraph.aws3.lambda_function;fillColor=#F58534;gradientColor=none;aspect=fixed;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="615" y="496.5" width="87.21" height="91" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

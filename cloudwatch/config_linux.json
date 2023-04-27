@@ -1,0 +1,24 @@
+{
+    "logs": {
+        "logs_collected": {
+            "files": {
+                "collect_list": [
+                    {
+                        "file_path": "/var/log/pcoip-agent/agent.log",
+                        "log_group_name": "${log_group}",
+                        "log_stream_name": "{instance_id}-pcoip-agent",
+                        "timestamp_format": "%Y-%m-%dT%H:%M:%S",
+                        "timezone": "UTC"
+                    }
+                ]
+            }
+        },
+        "log_stream_name": "default_log_stream"
+    },
+    "metrics": {
+        "namespace": "${namespace}",
+        "append_dimensions ": {
+            "InstanceId": "$${aws:InstanceId}"
+        }
+    }
+}
