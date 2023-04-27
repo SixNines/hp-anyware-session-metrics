@@ -249,7 +249,6 @@ import os
 from datetime import datetime
 
 NAMESPACE = os.environ.get("metrics_namespace")
-
 cw_client = boto3.client("cloudwatch")
 
 events_definitions = [
@@ -340,9 +339,7 @@ def handle_event(event, instance_id, match, timestamp):
 
 
 def lambda_handler(event, context):
-    print(event)
-
-    # Decode message
+    # Decode message sent by CloudWatch
     decoded_event = decode_event(event["awslogs"]["data"])
     print(decoded_event)
 
@@ -360,17 +357,35 @@ def lambda_handler(event, context):
 
         # Iterate over messages patterns
         for event_definition in events_definitions:
+
+            # Find a match with any of the regex definitions
             match = re.search(event_definition["event_pattern"], message)
             if match:
                 print(
                     "Event matched!",
                     {"event_type": event_definition["name"], "message": message},
                 )
+
+                # Push metric
                 handle_event(event_definition, instance_id, match, timestamp)
                 break
 ```
 
 ## Results
+
+These are some metrics extracted from a workstation running an active PCoIP session:
+
+### TX and RX
+
+![tx rx](images/tx_rx.png)
+
+### Round trip time
+
+![round trip time](images/round_trip_time.png)
+
+### Packet loss
+
+![packet loss](images/packet_loss.png)
 
 ## TL;DR
 
@@ -384,5 +399,12 @@ AWS Lambda is used to process filtered logs from AWS CloudWatch Logs and extract
 
 ## Reference
 
+The code presented in this post is available as a terraform module in https://github.com/SixNines/hp-anywhere-session-metrics
 
+You can deploy it in your account using:
 
+```hcl
+module "pcoip_metrics" {
+  source = "git@github.com:SixNines/hp-anywhere-session-metrics"
+}
+```

@@ -10,6 +10,7 @@ NAMESPACE = os.environ.get("metrics_namespace")
 
 cw_client = boto3.client("cloudwatch")
 
+# Events based on https://help.teradici.com/s/article/1395
 events_definitions = [
     {
         "event_pattern": ".*MGMT_PCOIP_DATA.*Tx thread info.*(?P<bw_group>bw limit\D*(?P<bw>[\d|\.]*))\W*(?P<avg_tx_group>avg tx\D*(?P<avg_tx>[\d|\.]*))\W*(?P<avg_rx_group>avg rx\D*(?P<avg_rx>[\d|\.]*)).*",
