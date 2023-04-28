@@ -1,9 +1,11 @@
 # Local .terraform directories
 **/.terraform/*
+.terraform
 
 # .tfstate files
 *.tfstate
 *.tfstate.*
+*.terraform.lock*
 
 # Crash log files
 crash.log
@@ -32,3 +34,10 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# Ignore files created to deploy module directly
+provider.tf
+*.tfvars
+
+# Ignore builds folder created by lambda module
+builds/

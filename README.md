@@ -1,4 +1,4 @@
-# HP Anywhere session metrics in AWS
+# PCoIP session metrics in AWS
 
 [HP Anywhere](https://www.hp.com/us-en/solutions/digital-workspaces.html) is a product that allows companys to grant remote access to virtual workstations using the [PCoIP protocol](https://www.teradici.com/what-is-pcoip), which offers a secure, high-definition and highly responsive computing experience when working on a remote desktop that can be hosted both onprem or in the cloud.
 
@@ -10,11 +10,9 @@ In this post we will explore a possible solution to programatically push these m
 
 ## Approach
 
-The EC2 instances used as workstations run a PCoIP agent (standard or graphic depending on the use case) that periodically saves this information into log files. The strategy we will be using is to configure the [AWS CloudWatch Agent](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Install-CloudWatch-Agent.html) in workstations with [AWS SSM](https://docs.aws.amazon.com/systems-manager/latest/userguide/what-is-systems-manager.html) to push this logs into CloudWatch Logs, apply a [CloudWatch Log Filter](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/MonitoringLogData.html) to send specific log lines to be processed by an [AWS lambda](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html) that will push the metrics to CloudWatch Metrics.
+The EC2 instances used as workstations run a PCoIP agent (standard or graphic depending on the use case) that [periodically saves this information into log files](https://help.teradici.com/s/article/1395). The strategy we will be using is to configure the [AWS CloudWatch Agent](https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Install-CloudWatch-Agent.html) in workstations with [AWS SSM](https://docs.aws.amazon.com/systems-manager/latest/userguide/what-is-systems-manager.html) to push this logs into CloudWatch Logs, apply a [CloudWatch Log Filter](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/MonitoringLogData.html) to send specific log lines to be processed by an [AWS lambda](https://docs.aws.amazon.com/lambda/latest/dg/welcome.html) that will push the metrics to CloudWatch Metrics.
 
 ![Architecture diagram](images/Diagram.svg)
-
-We will use terraform to deploy everything.
 
 ## Implementation
 
@@ -27,6 +25,7 @@ We will first create a Log group in CloudWatch where all the data is going to be
 resource "aws_cloudwatch_log_group" "pcoip_logs" {
   name              = "pcoip"
   retention_in_days = 14
+  tags              = var.tags
 }
 ```
 
@@ -37,78 +36,94 @@ The logs of the agent are located in **/var/log/pcoip-agent/** (Linux) or **C:\P
 **cloudwatch/config_windows.json**
 ```json
 {
-  "logs": {
-    "logs_collected": {
-      "files": {
-        "collect_list": [
-          {
-            "file_path": "C:\\ProgramData\\Teradici\\PCoIPAgent\\logs\\*pcoip_agent*",
-            "log_group_name": "${log_group}",
-            "log_stream_name": "{instance_id}-pcoip-agent",
-            "timestamp_format": "%Y-%m-%dT%H:%M:%S",
-            "timezone": "UTC"
-          }
-        ]
-      }
-    },
-    "log_stream_name": "default_log_stream"
-  },
-  "metrics": {
-    "namespace": "${namespace}",
-    "append_dimensions ": {
-      "InstanceId": "$${aws:InstanceId}"
+    "logs": {
+        "logs_collected": {
+            "files": {
+                "collect_list": [
+                    {
+                        "file_path": "C:\\ProgramData\\Teradici\\PCoIPAgent\\logs\\*Printing*",
+                        "log_group_name": "${log_group}",
+                        "log_stream_name": "{instance_id}-pcoip-printing-service",
+                        "timestamp_format": "%Y-%m-%dT%H:%M:%S",
+                        "timezone": "UTC"
+                    },
+                    {
+                        "file_path": "C:\\ProgramData\\Teradici\\PCoIPAgent\\logs\\*pcoip_agent*",
+                        "log_group_name": "${log_group}",
+                        "log_stream_name": "{instance_id}-pcoip-agent",
+                        "timestamp_format": "%Y-%m-%dT%H:%M:%S",
+                        "timezone": "UTC"
+                    },
+                    {
+                        "file_path": "C:\\ProgramData\\Teradici\\PCoIPAgent\\logs\\*pcoip_vhid*",
+                        "log_group_name": "${log_group}",
+                        "log_stream_name": "{instance_id}-pcoip-vhid",
+                        "timestamp_format": "%Y-%m-%dT%H:%M:%S",
+                        "timezone": "UTC"
+                    },
+                    {
+                        "file_path": "C:\\ProgramData\\Teradici\\PCoIPAgent\\logs\\*pcoip_server*",
+                        "log_group_name": "${log_group}",
+                        "log_stream_name": "{instance_id}-pcoip-server",
+                        "timestamp_format": "%Y-%m-%dT%H:%M:%S",
+                        "timezone": "UTC"
+                    }
+                ]
+            }
+        },
+        "log_stream_name": "default_log_stream"
     }
-  }
 }
 ```
 
 **cloudwatch/config_linux.json**
 ```json
 {
-  "logs": {
-    "logs_collected": {
-      "files": {
-        "collect_list": [
-          {
-            "file_path": "/var/log/pcoip-agent/agent.log",
-            "log_group_name": "${log_group}",
-            "log_stream_name": "{instance_id}-pcoip-agent",
-            "timestamp_format": "%Y-%m-%dT%H:%M:%S",
-            "timezone": "UTC"
-          }
-        ]
-      }
-    },
-    "log_stream_name": "default_log_stream"
-  },
-  "metrics": {
-    "namespace": "${namespace}",
-    "append_dimensions ": {
-      "InstanceId": "$${aws:InstanceId}"
+    "logs": {
+        "logs_collected": {
+            "files": {
+                "collect_list": [
+                    {
+                        "file_path": "/var/log/pcoip-agent/agent.log",
+                        "log_group_name": "${log_group}",
+                        "log_stream_name": "{instance_id}-pcoip-agent",
+                        "timestamp_format": "%Y-%m-%dT%H:%M:%S",
+                        "timezone": "UTC"
+                    },
+                    {
+                        "file_path": "/var/log/pcoip-agent/session-launcher.log",
+                        "log_group_name": "${log_group}",
+                        "log_stream_name": "{instance_id}-pcoip-launcher",
+                        "timestamp_format": "%Y-%m-%dT%H:%M:%S",
+                        "timezone": "UTC"
+                    }
+                ]
+            }
+        },
+        "log_stream_name": "default_log_stream"
     }
-  }
 }
 ```
 
 **ssm.tf**
 ```hcl
 resource "aws_ssm_parameter" "cloudwatch_config_linux" {
-  name = "cw/workstations/linux"
+  name = "/cw/workstations/linux"
   type = "String"
+  tags = var.tags
 
   value = replace(templatefile("${path.module}/cloudwatch/config_linux.json", {
-    log_group   = aws_cloudwatch_log_group.pcoip_logs.name
-    namespace   = "custom-metrics"
+    log_group = aws_cloudwatch_log_group.pcoip_logs.name
   }), "/\n| /", "")
 }
 
 resource "aws_ssm_parameter" "cloudwatch_config_windows" {
-  name = "cw/workstations/linux"
+  name = "/cw/workstations/windows"
   type = "String"
+  tags = var.tags
 
   value = replace(templatefile("${path.module}/cloudwatch/config_windows.json", {
-    log_group   = aws_cloudwatch_log_group.pcoip_logs.name
-    namespace   = "custom-metrics"
+    log_group = aws_cloudwatch_log_group.pcoip_logs.name
   }), "/\n| /", "")
 }
 ```
@@ -165,8 +180,9 @@ resource "aws_ssm_document" "cloudwatch_agent" {
   name            = "install-cloudwatch-agent"
   document_type   = "Command"
   document_format = "YAML"
+  tags            = var.tags
 
-  content = templatefile("${path.module}/cloudwatch_agent_provisioning.yaml", {
+  content = templatefile("${path.module}/ssm/cloudwatch_agent_provisioning.yaml", {
     linux_ssm_parameter   = aws_ssm_parameter.cloudwatch_config_linux.name
     windows_ssm_parameter = aws_ssm_parameter.cloudwatch_config_windows.name
   })
@@ -177,8 +193,8 @@ resource "aws_ssm_association" "cloudwatch_agent" {
   association_name = "install-cloudwatch-agent-in-workstations"
 
   targets {
-    key    = "tag:type"
-    values = ["workstation"]
+    key    = "tag:${var.workstation_tag.key}"
+    values = [var.workstation_tag.value]
   }
 }
 ```
@@ -195,7 +211,7 @@ resource "aws_cloudwatch_log_subscription_filter" "pcoip_metrics" {
   name            = "pcoip-metrics"
   log_group_name  = aws_cloudwatch_log_group.pcoip_logs.name
   filter_pattern  = "?MGMT_PCOIP_DATA ?VGMAC ?MGMT_IMG"
-  destination_arn = module.metrics_publisher.lambda_arn
+  destination_arn = module.metrics_publisher.lambda_function_arn
 }
 
 resource "aws_lambda_permission" "allow_trigger_metrics_publisher" {
@@ -223,6 +239,7 @@ module "metrics_publisher" {
   ignore_source_code_hash           = true
   attach_policy_statements          = true
   cloudwatch_logs_retention_in_days = 14
+  tags                              = var.tags
 
   policy_statements = {
     cloudwatch = {
@@ -233,7 +250,7 @@ module "metrics_publisher" {
   }
 
   environment_variables = {
-    metrics_namespace = "custom-metrics"
+    metrics_namespace = var.metrics_namespace
   }
 }
 ```
@@ -251,6 +268,7 @@ from datetime import datetime
 NAMESPACE = os.environ.get("metrics_namespace")
 cw_client = boto3.client("cloudwatch")
 
+# Events based on https://help.teradici.com/s/article/1395
 events_definitions = [
     {
         "event_pattern": ".*MGMT_PCOIP_DATA.*Tx thread info.*(?P<bw_group>bw limit\D*(?P<bw>[\d|\.]*))\W*(?P<avg_tx_group>avg tx\D*(?P<avg_tx>[\d|\.]*))\W*(?P<avg_rx_group>avg rx\D*(?P<avg_rx>[\d|\.]*)).*",
@@ -406,5 +424,12 @@ You can deploy it in your account using:
 ```hcl
 module "pcoip_metrics" {
   source = "git@github.com:SixNines/hp-anywhere-session-metrics"
+
+  metrics_namespace = "pcoip"
+  
+  workstation_tag = {
+    key   = "type"
+    value = "workstation"
+  }
 }
 ```

@@ -7,7 +7,6 @@ import os
 from datetime import datetime
 
 NAMESPACE = os.environ.get("metrics_namespace")
-
 cw_client = boto3.client("cloudwatch")
 
 # Events based on https://help.teradici.com/s/article/1395
@@ -99,9 +98,7 @@ def handle_event(event, instance_id, match, timestamp):
 
 
 def lambda_handler(event, context):
-    print(event)
-
-    # Decode message
+    # Decode message sent by CloudWatch
     decoded_event = decode_event(event["awslogs"]["data"])
     print(decoded_event)
 
@@ -119,11 +116,15 @@ def lambda_handler(event, context):
 
         # Iterate over messages patterns
         for event_definition in events_definitions:
+
+            # Find a match with any of the regex definitions
             match = re.search(event_definition["event_pattern"], message)
             if match:
                 print(
                     "Event matched!",
                     {"event_type": event_definition["name"], "message": message},
                 )
+
+                # Push metric
                 handle_event(event_definition, instance_id, match, timestamp)
                 break

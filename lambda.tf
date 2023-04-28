@@ -13,13 +13,7 @@ module "metrics_publisher" {
   ignore_source_code_hash           = true
   attach_policy_statements          = true
   cloudwatch_logs_retention_in_days = 14
-
-  allowed_triggers = {
-    sns = {
-      principal  = "sns.amazonaws.com"
-      source_arn = aws_sns_topic.photo_album_create.arn
-    }
-  }
+  tags                              = var.tags
 
   policy_statements = {
     cloudwatch = {
@@ -30,6 +24,6 @@ module "metrics_publisher" {
   }
 
   environment_variables = {
-    metrics_namespace = "custom-metrics"
+    metrics_namespace = var.metrics_namespace
   }
 }

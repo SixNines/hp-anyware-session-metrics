@@ -4,9 +4,30 @@
             "files": {
                 "collect_list": [
                     {
+                        "file_path": "C:\\ProgramData\\Teradici\\PCoIPAgent\\logs\\*Printing*",
+                        "log_group_name": "${log_group}",
+                        "log_stream_name": "{instance_id}-pcoip-printing-service",
+                        "timestamp_format": "%Y-%m-%dT%H:%M:%S",
+                        "timezone": "UTC"
+                    },
+                    {
                         "file_path": "C:\\ProgramData\\Teradici\\PCoIPAgent\\logs\\*pcoip_agent*",
                         "log_group_name": "${log_group}",
                         "log_stream_name": "{instance_id}-pcoip-agent",
+                        "timestamp_format": "%Y-%m-%dT%H:%M:%S",
+                        "timezone": "UTC"
+                    },
+                    {
+                        "file_path": "C:\\ProgramData\\Teradici\\PCoIPAgent\\logs\\*pcoip_vhid*",
+                        "log_group_name": "${log_group}",
+                        "log_stream_name": "{instance_id}-pcoip-vhid",
+                        "timestamp_format": "%Y-%m-%dT%H:%M:%S",
+                        "timezone": "UTC"
+                    },
+                    {
+                        "file_path": "C:\\ProgramData\\Teradici\\PCoIPAgent\\logs\\*pcoip_server*",
+                        "log_group_name": "${log_group}",
+                        "log_stream_name": "{instance_id}-pcoip-server",
                         "timestamp_format": "%Y-%m-%dT%H:%M:%S",
                         "timezone": "UTC"
                     }
@@ -14,11 +35,5 @@
             }
         },
         "log_stream_name": "default_log_stream"
-    },
-    "metrics": {
-        "namespace": "${namespace}",
-        "append_dimensions ": {
-            "InstanceId": "$${aws:InstanceId}"
-        }
     }
 }
