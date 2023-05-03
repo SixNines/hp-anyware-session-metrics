@@ -1,12 +1,12 @@
-# PCoIP session metrics in AWS
+# HP Anyware PCoIP session metrics in the Amazon Cloud
 
-[HP Anywhere](https://www.hp.com/us-en/solutions/digital-workspaces.html) is a product that allows companys to grant remote access to virtual workstations using the [PCoIP protocol](https://www.teradici.com/what-is-pcoip), which offers a secure, high-definition and highly responsive computing experience when working on a remote desktop that can be hosted both onprem or in the cloud.
+[HP Anywhere](https://www.hp.com/us-en/solutions/digital-workspaces.html) is a product that allows high fidelity remote access to virtual workstations using the [PCoIP protocol](https://www.teradici.com/what-is-pcoip). It offers a secure, high-definition, and highly responsive computing experience when working on a remote desktop hosted either on premises or in the cloud. It's very popular for media, entertainment, gaming, and engineering users that want to use a remote high powered remote workstation for graphically demanding workloads.
 
-When this solution is used in AWS, there are many infrastructure patterns that can be followed to implement it, like [this doc](https://www.teradici.com/web-help/pcoip/anyware-architecture-guide/2022.07/connection_models/connection-models) shows.
+Here at Nextira, we have helped many clients use HP Anyware in AWS. There are many infrastructure patterns that can be followed to implement it based on your needs, like [this doc](https://www.teradici.com/web-help/pcoip/anyware-architecture-guide/2022.07/connection_models/connection-models) shows.
 
-Once your infrastructure is ready and fully functional, your users are ready to connect to their workstations, and the support and troubleshooting phase starts. Even though HP offers some tools to get metrics of a PCoIP session, like the [PCoIP Session Statistics Viewer](https://docs.teradici.com/knowledge/pcoip-session-statistics-viewer), it can sometimes be challenging to pull those metrics.
+But once your AWS/HP Anyware infrastructure is ready and fully functional, your users are ready to connect to their workstations, and the support and troubleshooting phase starts. Graphical performance can be affected by the PCoIP server, the end user's network connection, company firewalls, and load on the user's end client. When someone is having a poor graphical experience, you need metrics to find out where the issue lies.  Even though HP offers some tools to get metrics of a PCoIP session, like the [PCoIP Session Statistics Viewer](https://docs.teradici.com/knowledge/pcoip-session-statistics-viewer), it can sometimes be challenging to pull those metrics into your existing observability systems to monitor them more proactively.
 
-In this post we will explore a possible solution to programatically push these metrics to AWS CloudWatch to empower your IT team to support your users.
+In this post we will explore a solution to programatically push these metrics to AWS CloudWatch to empower your IT team to support your users.
 
 ## Approach
 
